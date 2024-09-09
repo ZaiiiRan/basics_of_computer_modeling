@@ -1,11 +1,20 @@
 package plots
 
 import (
+	"image"
+	_ "image/png"
 	"log"
+	"os"
+
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
+
+	"gioui.org/app"
+	"gioui.org/op"
+	"gioui.org/op/paint"
+
 
 	"lab1/internal/funcs"
 )
@@ -82,9 +91,64 @@ func CreatePlot(x []float64, y []float64, aLin, bLin, aPow, bPow, aExp, bExp, aQ
 	p.Legend.Add("Показательная", expLine)
 	p.Legend.Add("Квадратичная", quadLine)
 
-	if err := p.Save(8*vg.Inch, 6*vg.Inch, "plot.png"); err != nil {
+	if err := p.Save(12*vg.Inch, 9*vg.Inch, "plot.png"); err != nil {
 		log.Fatalf("Произошла ошибка при сохранении графика: %v", err)
 	}
 
 	log.Println("График сохранен как plot.png")
+}
+
+func OpenPlot() {
+	go func() {
+		window := new(app.Window)
+		window.Option(app.Title("График"))
+		err := run(window)
+		if err != nil {
+			log.Fatal(err)
+		}
+		os.Exit(0)
+	}()
+	app.Main()
+}
+
+func run(window *app.Window) error {
+	img, err := loadImage("plot.png")
+	if err != nil {
+		return err
+	}
+
+	var ops op.Ops
+	for {
+		switch e := window.Event().(type) {
+		case app.DestroyEvent:
+			return e.Err
+		case app.FrameEvent:
+			gtx := app.NewContext(&ops, e)
+
+			imgOp := paint.NewImageOp(img)
+
+			imgOp.Add(gtx.Ops)
+
+
+			paint.NewImageOp(img).Add(&ops)
+			paint.PaintOp{}.Add(&ops)
+
+			e.Frame(gtx.Ops)
+		}
+	}
+}
+
+func loadImage(path string) (image.Image, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	img, _, err := image.Decode(file)
+	if err != nil {
+		return nil, err
+	}
+
+	return img, nil
 }

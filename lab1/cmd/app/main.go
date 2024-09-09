@@ -106,4 +106,6 @@ func main() {
 	fmt.Printf("Погрешность степенной аппроксимации: %.2f\n", powErr)
 	fmt.Printf("Погрешность показательной аппроксимации: %.2f\n", expErr)
 	fmt.Printf("Погрешность квадратичной аппроксимации: %.2f\n", quadErr)
+
+	plots.OpenPlot()
 }
