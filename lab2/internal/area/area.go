@@ -7,6 +7,7 @@ import (
     "gonum.org/v1/plot/plotter"
     "gonum.org/v1/plot/vg"
 	"image/color"
+    "fmt"
 )
 
 type AreaCalculator struct {
@@ -62,6 +63,7 @@ func (ac *AreaCalculator) GeneratePoints() {
 
 func (ac *AreaCalculator) CalculateArea() (float64, float64) {
     m := float64(len(ac.inside))
+    fmt.Println(len(ac.inside))
     s := (m / float64(ac.N)) * ac.a * ac.b * 4
     return s, 7 * math.Pi
 }

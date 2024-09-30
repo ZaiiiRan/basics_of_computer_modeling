@@ -42,14 +42,14 @@ func triangle() {
 
 	abs_error := math.Abs(exact_area - approx_area)
 	fmt.Printf("Абсолютная погрешность: %.4f\n", abs_error)
-	fmt.Printf("Относительная погрешность: %4f\n", abs_error / exact_area)
+	fmt.Printf("Относительная погрешность: %4f\n", (abs_error / exact_area) * 100)
 
 	triangle.BuildPlot(points, "./task1.png")
 }
 
 func integrate() {
 	var integral integral.Integral
-	integral.Init(0, 5, 5000, func(x float64) float64 { return math.Sqrt(29 - 14 * math.Pow(math.Cos(x), 2)) })
+	integral.Init(0, 5, 1000, func(x float64) float64 { return math.Sqrt(29 - 14 * math.Pow(math.Cos(x), 2)) })
 
 	inside, outside := integral.GeneratePoints()
 
@@ -60,14 +60,14 @@ func integrate() {
 	fmt.Printf("Точная площадь: %4f\n", exactValue)
 	absoluteError := math.Abs(approxArea - exactValue)
 	fmt.Printf("Абсолютная погрешность: %.4f\n", absoluteError)
-	fmt.Printf("Относительная погрешность: %.4f\n", absoluteError/exactValue)
+	fmt.Printf("Относительная погрешность: %.4f\n", (absoluteError/exactValue) * 100)
 
 	integral.BuildPlot(inside, outside, "./task2.png")
 }
 
 func findPi() {
 	radius := 14.0
-	N := 5000
+	N := 1000
 
 	simulator := pi.PiSimulator{
 		N: N,
@@ -82,7 +82,7 @@ func findPi() {
 
 	// Вычисление абсолютной и относительной погрешности
 	absoluteError := math.Abs(piEstimate - math.Pi)
-	relativeError := absoluteError / math.Pi
+	relativeError := (absoluteError / math.Pi) * 100
 	fmt.Printf("Абсолютная погрешность: %.6f\n", absoluteError)
 	fmt.Printf("Относительная погрешность: %.6f\n", relativeError)
 
@@ -100,7 +100,7 @@ func findArea() {
     fmt.Printf("Точное значение площади: %.4f\n", exactValue)
     absoluteError := math.Abs(approxArea - exactValue)
     fmt.Printf("Абсолютная погрешность: %.4f\n", absoluteError)
-    fmt.Printf("Относительная погрешность: %.4f\n", absoluteError/exactValue)
+    fmt.Printf("Относительная погрешность: %.4f\n", (absoluteError/exactValue) * 100)
 
     ac.BuildPlot("./task4.png")
 }
