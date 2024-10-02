@@ -51,6 +51,41 @@ func modifiedMiddleSquareMethod() {
 	}
 }
 
+func lemerMethod() {
+	N := 5
+	R0 := 0.585
+	g := 927
+	fmt.Println("Начальные данные: ")
+	fmt.Println("N = ", N)
+	fmt.Println("R0 = ", R0)
+	fmt.Println("g = ", g)
+
+
+	result := generator.LemerMethod(R0, float64(g), N)
+	fmt.Println("\nПолученная последовательность: ")
+	for i, num := range result {
+		fmt.Printf("R%d =  %.4f\n", i, num)
+	}
+}
+
+func lemerMethod2() {
+	N := 6
+	a := 265
+	m := 129
+	seed := 122
+	fmt.Println("Начальные данные: ")
+	fmt.Println("N = ", N)
+	fmt.Println("a = ", a)
+	fmt.Println("m = ", m)
+	fmt.Println("X0 = ", seed)
+
+	result := generator.MultiplicativeCongruentialMethod(seed, a, m, N)
+	fmt.Println("\nПолученная последовательность: ")
+	for i, num := range result {
+		fmt.Printf("R%d =  %.4f\n", i + 1, num)
+	}
+}
+
 func interactive() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -58,6 +93,8 @@ func interactive() {
 		fmt.Println("\nВыберите действие:")
 		fmt.Println("1 - N случайных чисел методом Неймана (срединных квадратов)")
 		fmt.Println("2 - N случайных чисел модифицированным методом Неймана (срединных квадратов)")
+		fmt.Println("3 - N случайных чисел при помощи алгоритма Лемера")
+		fmt.Println("4 - N случайных чисел мультипликативным конгруэнтным методом")
 		fmt.Println("0 - Выход")
 
 		fmt.Print("\n\n\nВведите номер действия: ")
@@ -74,6 +111,18 @@ func interactive() {
 			clearCmd()
 			reader.ReadString('\n')
 			modifiedMiddleSquareMethod()
+			reader.ReadByte()
+			clearCmd()
+		case '3':
+			clearCmd()
+			reader.ReadString('\n')
+			lemerMethod()
+			reader.ReadByte()
+			clearCmd()
+		case '4':
+			clearCmd()
+			reader.ReadString('\n')
+			lemerMethod2()
 			reader.ReadByte()
 			clearCmd()
 		case '0':
