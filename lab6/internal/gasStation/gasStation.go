@@ -1,11 +1,12 @@
 package gasStation
 
 import (
+	"fmt"
 	"lab6/internal/queue"
 	"lab6/internal/request"
-	"math"
 	"math/rand"
 	"time"
+	"math"
 )
 
 type GasStation struct {
@@ -53,13 +54,17 @@ func (gs *GasStation) Run(numRequests int) {
 		// Новая заявка
 		if gs.currentTime >= gs.nextRequestArrivalTime {
 			newRequest := request.NewRequest(gs.nextRequestArrivalTime)
+			fmt.Println("Клиент подъехал")
 			if gs.queue1.Size() < 5 && (gs.queue1.Size() <= gs.queue2.Size()) {
+				fmt.Println("Клиент добавлен в 1 очередь")
 				gs.queue1.Enqueue(newRequest)
 				gs.updateQueueLengths()
 			} else if gs.queue2.Size() < 5 {
+				fmt.Println("Клиент добавлен во 2 очередь")
 				gs.queue2.Enqueue(newRequest)
 				gs.updateQueueLengths()
 			} else {
+				fmt.Println("Клиент уехал, так как очереди переполнены")
 				gs.lostRequests++
 			}
 			gs.totalRequests = append(gs.totalRequests, newRequest)
@@ -89,6 +94,7 @@ func (gs *GasStation) Run(numRequests int) {
 			}
 			gs.currentRequest1 = nil
 			gs.updateQueueLengths()
+			fmt.Println("Клиент уехал, обработка завершена (из первой очереди)")
 		}
 
 		// Завершение обслуживания во второй очереди
@@ -100,6 +106,7 @@ func (gs *GasStation) Run(numRequests int) {
 			}
 			gs.currentRequest2 = nil
 			gs.updateQueueLengths()
+			fmt.Println("Клиент уехал, обработка завершена (из второй очереди)")
 		}
 
 		// Увеличение времени
@@ -116,7 +123,7 @@ func (gs *GasStation) updateQueueLengths() {
 
 // Генерация времени следующей заявки
 func (gs *GasStation) generateNextRequestArrivalTime() float64 {
-	// Из предыдущих наблюдений известно, что интервалы времени между прибытием клиентов в час пик распределены экспоненциально с математическим ожиданием, равным 0.1 единицы времени. 
+	// Из предыдущих наблюдений известно, что интервалы времени между прибытием клиентов в час пик распределены экспоненциально с математическим ожиданием, равным 0.1 единицы времени.
 	return gs.currentTime + gs.generateExponential(0.1)
 }
 
@@ -128,7 +135,7 @@ func (gs *GasStation) generateServiceTime() float64 {
 
 // Генерация экспоненциального распределения
 func (gs *GasStation) generateExponential(lambda float64) float64 {
-	return -math.Log(1-gs.random.Float64()) / lambda
+	return generateExponential(gs.random.ExpFloat64(), lambda)
 }
 
 // Средняя длина очереди 1
@@ -171,7 +178,7 @@ func (gs *GasStation) LostRequestPercentage() float64 {
 	if totalRequests == 0 {
 		return 0
 	}
-	return float64(gs.lostRequests) / float64(totalRequests)
+	return float64(gs.lostRequests) / (float64(totalRequests) * 2)
 }
 
 // Средний интервал между отъездами
@@ -196,4 +203,8 @@ func (gs *GasStation) AverageTimeInSystem() float64 {
 		total += req.EndTime - req.ReceiptTime
 	}
 	return total / float64(len(gs.servedRequests))
+}
+
+func generateExponential(random float64, lambda float64) float64 { 
+	return random / math.Pow(lambda, -1)
 }
