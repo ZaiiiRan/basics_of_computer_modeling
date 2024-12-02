@@ -24,7 +24,7 @@ func simulateMachine() {
 
 func simulateGasStation() {
 	gs := gasStation.NewGasStation()
-	gs.Simulate(400)
+	gs.Run(400)
 
 	avgQueueLength1 := gs.AverageQueueLength1()
 	avgQueueLength2 := gs.AverageQueueLength2()

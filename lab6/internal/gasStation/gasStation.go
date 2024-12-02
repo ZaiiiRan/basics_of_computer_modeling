@@ -46,7 +46,7 @@ func NewGasStation() *GasStation {
 	return gs
 }
 
-func (gs *GasStation) Simulate(numRequests int) {
+func (gs *GasStation) Run(numRequests int) {
 	gs.nextRequestArrivalTime = gs.generateNextRequestArrivalTime()
 
 	for len(gs.totalRequests) < numRequests {
